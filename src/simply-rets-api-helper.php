@@ -1389,6 +1389,7 @@ HTML;
         }
 
         $resultsMarkup = "";
+		$resultsIndex = 0;
         foreach( $response as $listing ) {
             $listing_uid        = $listing->mlsId;
             $mlsid              = $listing->listingId;
@@ -1527,47 +1528,54 @@ HTML;
             } else {
                 $bathsMarkup = SimplyRetsApiHelper::resultDataColumnMarkup($bathsFull, 'Full Baths');
             }
+			
+			if($resultsIndex % 3 === 0) {
+				 $resultsMarkup .= '<div class="et_pb_row anasazi_listing_row">';
+			}
 
 
             // append markup for this listing to the content
             $resultsMarkup .= <<<HTML
-              <hr>
-              <div class="sr-listing">
-                <a href="$link">
-                  <div class="sr-photo" style="background-image:url('$main_photo');">
-                  </div>
-                </a>
-                <div class="sr-listing-data-wrapper">
-                  <div class="sr-primary-data">
-                    <a href="$link">
-                      <h4>$full_address
-                        <small class="sr-price"><i> - $listing_USD</i></small>
-                      </h4>
-                    </a>
-                  </div>
-                  <div class="sr-secondary-data">
-                    <ul class="sr-data-column">
-                      $cityMarkup
-                      $yearMarkup
-                      $mlsidMarkup
-                    </ul>
-                    <ul class="sr-data-column">
-                      $bedsMarkup
-                      $bathsMarkup
-                      $areaMarkup
-                    </ul>
-                  </div>
-                </div>
-                <div class="more-details-wrapper">
-                  <span class="more-details-link">
-                      <a href="$link">More details</a>
-                  </span>
-                  <span class="result-compliance-markup">
-                    $compliance_markup
-                  </span>
-                </div>
-              </div>
+			<div class="et_pb_column anasazi_listing_column et_pb_column_1_3 et_pb_css_mix_blend_mode_passthrough">
+				<div class="et_pb_module et_pb_image anasazi_listing_image">
+					<span class="et_pb_image_wrap ">
+						<a href="$link">
+							<img src="$main_photo" alt="">
+						</a>
+					</span>
+				</div>
+				<div class="et_pb_button_module_wrapper et_pb_button_alignment_center et_pb_module et_had_animation" style="">
+					<a class="et_pb_button anasazi_listing_button et_pb_custom_button_icon et_hover_enabled et_pb_bg_layout_dark" href="$link" data-icon="5">View Listing</a>
+				</div>
+				<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center">
+					<div class="et_pb_text_inner">
+						<p>$city, UT</p>
+						<p>$address</p>
+						<h4>$listing_USD</h4>
+						<p>Beds: $bedrooms</p>
+						<p>Baths: $bathsFull | $bathsHalf</p>
+						<p>Sq. Ft. $area</p>
+					</div>
+				</div>
+				<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center anasazi_listing_meta">
+					<div class="et_pb_text_inner">
+						<div class="anasazi_listing_meta_left">
+							<p>Listing Curtesy Of: $listing_office</p>
+							<p>Listing Agent: $listing_agent_name</p>
+						</div>
+						<div class="anasazi_listing_meta_right">
+							<p>#$mlsid</p>
+						</div>
+					</div>
+				</div>
+			</div>
 HTML;
+			
+			if($resultsIndex % 3 === 2) {
+				 $resultsMarkup .= '</div>';
+			}
+
+			$resultsIndex++;
 
         }
 

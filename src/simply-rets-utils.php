@@ -110,6 +110,10 @@ class SrUtils {
                      "sr_idx_address_display_text",
                      "Undisclosed address"
                  ) : $listing->address->full;
+				 
+		if ( !$address ) {
+			$address = 'Undisclosed Address';
+		}
 
         $city = $listing->address->city;
         $state = $listing->address->state;
@@ -384,7 +388,7 @@ class SrUtils {
 
         } else {
 
-            return "This information is believed to be accurate, but without any warranty.";
+            return "Information deemed reliable but not guaranteed accurate. Buyer to verify all information. The multiple listing information is provided by Wasatch Front Regional Multiple Listing Service, Inc. from a copyrighted compilation of listings. The compilation of listings and each individual listing are © 2020 Wasatch Front Regional Multiple Listing Service, Inc., All Rights Reserved. The information provided is for consumers' personal, non-commercial use and may not be used for any purpose other than to identify prospective properties consumers may be interested in purchasing. By using this compilation, you agree to its <a href=\"http://pw.idxre.com/pw/templates/257_UT_WFRMLS_IDX_Terms_of_Use_and_Linking_Agreement.pdf\" target=\"_blank\">Terms of Use</a>.</br>WFR-UtahRealEstate data last updated at $lastUpdate GMT";
 
         }
     }

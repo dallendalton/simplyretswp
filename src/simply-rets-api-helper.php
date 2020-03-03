@@ -748,6 +748,9 @@ HTML;
         $listing_address = $listing->address->full;
         $full_address = SrUtils::buildFullAddressString($listing);
         $address = SimplyRetsApiHelper::srDetailsTable($full_address, "Address");
+		if ( !$address ) {
+			$address = 'Undisclosed Address';
+		}
 
         $listing_city = $listing->address->city;
         $city = SimplyRetsApiHelper::srDetailsTable($listing_city, "City");
@@ -1155,148 +1158,287 @@ HTML;
         }
         /************************************************/
 
+		if ( $listing->property->type === 'LND' ) {
+			
+			// listing markup
+			$cont .= <<<HTML
+			  <div class="sr-details" style="text-align:left;">
+				$listing_by_markup
+				<p class="sr-details-links" style="clear:both;">
+				  $mapLink
+				  $more_photos
+				  <span id="sr-listing-contact">
+					<a href="#sr-contact-form">$contact_text</a>
+				  </span>
+				</p>
+				$gallery_markup
+				<script>
+				  if(document.getElementById('sr-fancy-gallery')) {
+					  Galleria.loadTheme('$galleria_theme');
+					  Galleria.configure({
+						  height: 500,
+						  width:  "90%",
+						  showinfo: false,
+						  dummy: "$dummy",
+						  lightbox: true,
+						  imageCrop: false,
+						  imageMargin: 0,
+						  fullscreenDoubleTap: true
+					  });
+					  Galleria.run('.sr-gallery');
+				  }
+				</script>
+				<div class="sr-primary-details">
+				  <div class="sr-detail" id="sr-primary-details-size">
+					<h3>$listing_acres <small class="sr-listing-area-sqft">Acres</small></h3>
+				  </div>
+				  <div class="sr-detail" id="sr-primary-details-status">
+					<h3>$listing_mls_status</h3>
+				  </div>
+				</div>
+				$remarks_markup
+				<div>
+				  $next_openhouses_banner
+				</div>
+				<table style="width:100%;">
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Property Details</h5></th></tr></thead>
+				  <tbody>
+					$price
+					$close_price
+					$bedrooms
+					$bathsFull
+					$bathsHalf
+					$bathsTotal
+					$style
+					$lotsize_markup
 
-        // listing markup
-        $cont .= <<<HTML
-          <div class="sr-details" style="text-align:left;">
-            $listing_by_markup
-            <p class="sr-details-links" style="clear:both;">
-              $mapLink
-              $more_photos
-              <span id="sr-listing-contact">
-                <a href="#sr-contact-form">$contact_text</a>
-              </span>
-            </p>
-            $gallery_markup
-            <script>
-              if(document.getElementById('sr-fancy-gallery')) {
-                  Galleria.loadTheme('$galleria_theme');
-                  Galleria.configure({
-                      height: 500,
-                      width:  "90%",
-                      showinfo: false,
-                      dummy: "$dummy",
-                      lightbox: true,
-                      imageCrop: false,
-                      imageMargin: 0,
-                      fullscreenDoubleTap: true
-                  });
-                  Galleria.run('.sr-gallery');
-              }
-            </script>
-            <div class="sr-primary-details">
-              <div class="sr-detail" id="sr-primary-details-beds">
-                <h3>$listing_bedrooms <small>Beds</small></h3>
-              </div>
-              <div class="sr-detail" id="sr-primary-details-baths">
-                <h3>$primary_baths<small> Baths</small></h3>
-              </div>
-              <div class="sr-detail" id="sr-primary-details-size">
-                <h3>$area <small class="sr-listing-area-sqft">SqFt</small></h3>
-              </div>
-              <div class="sr-detail" id="sr-primary-details-status">
-                <h3>$listing_mls_status</h3>
-              </div>
-            </div>
-            $remarks_markup
-            <div>
-              $next_openhouses_banner
-            </div>
-            <table style="width:100%;">
-              <thead>
-                <tr>
-                  <th colspan="3"><h5>Property Details</h5></th></tr></thead>
-              <tbody>
-                $price
-                $close_price
-                $bedrooms
-                $bathsFull
-                $bathsHalf
-                $bathsTotal
-                $style
-                $lotsize_markup
+					$lotsizearea_markup
+					$lotsizeareaunits_markup
+					$acres_markup
 
-                $lotsizearea_markup
-                $lotsizeareaunits_markup
-                $acres_markup
-
-                $type
-                $subType
-                $stories
-                $interiorFeatures
-                $exteriorFeatures
-                $yearBuilt
-                $fireplaces
-                $subdivision
-                $view
-                $roof
-                $water
-                $heating
-                $foundation
-                $accessibility
-                $lot_description
-                $laundry_features
-                $pool
-                $parking_description
-                $parking_spaces
-                $garage_spaces
-                $association_name
-                $association_fee
-                $association_amenities
-                $additional_rooms
-                $roomsMarkup
-              </tbody>
-              $geo_table_header
-                $geo_directions
-                $geo_county
-                $geo_latitude
-                $geo_longitude
-                $geo_market_area
-              </tbody>
-              <thead>
-                <tr>
-                  <th colspan="3"><h5>Address Information</h5></th></tr></thead>
-              <tbody>
-                $address
-                $unit
-                $postal_code
-                $city
-                $cross_street
-                $state
-                $country
-              </tbody>
-              <thead>
-                <tr>
-                  <th colspan="3"><h5>Listing Information</h5></th></tr></thead>
-              <tbody>
-                $office
-                $officePhone
-                $officeEmail
-                $agent
-                $agent_phone
-                $terms
-                $virtual_tour
-              </tbody>
-              $school_data
-              <thead>
-                <tr>
-                  <th colspan="3"><h5>$MLS_text Information</h5></th></tr></thead>
-              <tbody>
-                $days_on_market
-                $mls_status
-                $list_date
-                $date_modified_markup
-                $tax_data
-                $tax_year
-                $tax_annual_amount
-                $mls_area
-                $mlsid
-              </tbody>
-            </table>
-            $mapMarkup
-            <script>$lh_analytics</script>
-          </div>
+					$type
+					$subType
+					$stories
+					$interiorFeatures
+					$exteriorFeatures
+					$yearBuilt
+					$fireplaces
+					$subdivision
+					$view
+					$roof
+					$water
+					$heating
+					$foundation
+					$accessibility
+					$lot_description
+					$laundry_features
+					$pool
+					$parking_description
+					$parking_spaces
+					$garage_spaces
+					$association_name
+					$association_fee
+					$association_amenities
+					$additional_rooms
+					$roomsMarkup
+				  </tbody>
+				  $geo_table_header
+					$geo_directions
+					$geo_county
+					$geo_latitude
+					$geo_longitude
+					$geo_market_area
+				  </tbody>
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Address Information</h5></th></tr></thead>
+				  <tbody>
+					$address
+					$unit
+					$postal_code
+					$city
+					$cross_street
+					$state
+					$country
+				  </tbody>
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Listing Information</h5></th></tr></thead>
+				  <tbody>
+					$office
+					$officePhone
+					$officeEmail
+					$agent
+					$agent_phone
+					$terms
+					$virtual_tour
+				  </tbody>
+				  $school_data
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>$MLS_text Information</h5></th></tr></thead>
+				  <tbody>
+					$days_on_market
+					$mls_status
+					$list_date
+					$date_modified_markup
+					$tax_data
+					$tax_year
+					$tax_annual_amount
+					$mls_area
+					$mlsid
+				  </tbody>
+				</table>
+				$mapMarkup
+				<script>$lh_analytics</script>
+			  </div>
 HTML;
+		} else {
+			// listing markup
+			$cont .= <<<HTML
+			  <div class="sr-details" style="text-align:left;">
+				$listing_by_markup
+				<p class="sr-details-links" style="clear:both;">
+				  $mapLink
+				  $more_photos
+				  <span id="sr-listing-contact">
+					<a href="#sr-contact-form">$contact_text</a>
+				  </span>
+				</p>
+				$gallery_markup
+				<script>
+				  if(document.getElementById('sr-fancy-gallery')) {
+					  Galleria.loadTheme('$galleria_theme');
+					  Galleria.configure({
+						  height: 500,
+						  width:  "90%",
+						  showinfo: false,
+						  dummy: "$dummy",
+						  lightbox: true,
+						  imageCrop: false,
+						  imageMargin: 0,
+						  fullscreenDoubleTap: true
+					  });
+					  Galleria.run('.sr-gallery');
+				  }
+				</script>
+				<div class="sr-primary-details">
+				  <div class="sr-detail" id="sr-primary-details-beds">
+					<h3>$listing_bedrooms <small>Beds</small></h3>
+				  </div>
+				  <div class="sr-detail" id="sr-primary-details-baths">
+					<h3>$primary_baths<small> Baths</small></h3>
+				  </div>
+				  <div class="sr-detail" id="sr-primary-details-size">
+					<h3>$area <small class="sr-listing-area-sqft">SqFt</small></h3>
+				  </div>
+				  <div class="sr-detail" id="sr-primary-details-status">
+					<h3>$listing_mls_status</h3>
+				  </div>
+				</div>
+				$remarks_markup
+				<div>
+				  $next_openhouses_banner
+				</div>
+				<table style="width:100%;">
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Property Details</h5></th></tr></thead>
+				  <tbody>
+					$price
+					$close_price
+					$bedrooms
+					$bathsFull
+					$bathsHalf
+					$bathsTotal
+					$style
+					$lotsize_markup
+
+					$lotsizearea_markup
+					$lotsizeareaunits_markup
+					$acres_markup
+
+					$type
+					$subType
+					$stories
+					$interiorFeatures
+					$exteriorFeatures
+					$yearBuilt
+					$fireplaces
+					$subdivision
+					$view
+					$roof
+					$water
+					$heating
+					$foundation
+					$accessibility
+					$lot_description
+					$laundry_features
+					$pool
+					$parking_description
+					$parking_spaces
+					$garage_spaces
+					$association_name
+					$association_fee
+					$association_amenities
+					$additional_rooms
+					$roomsMarkup
+				  </tbody>
+				  $geo_table_header
+					$geo_directions
+					$geo_county
+					$geo_latitude
+					$geo_longitude
+					$geo_market_area
+				  </tbody>
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Address Information</h5></th></tr></thead>
+				  <tbody>
+					$address
+					$unit
+					$postal_code
+					$city
+					$cross_street
+					$state
+					$country
+				  </tbody>
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>Listing Information</h5></th></tr></thead>
+				  <tbody>
+					$office
+					$officePhone
+					$officeEmail
+					$agent
+					$agent_phone
+					$terms
+					$virtual_tour
+				  </tbody>
+				  $school_data
+				  <thead>
+					<tr>
+					  <th colspan="3"><h5>$MLS_text Information</h5></th></tr></thead>
+				  <tbody>
+					$days_on_market
+					$mls_status
+					$list_date
+					$date_modified_markup
+					$tax_data
+					$tax_year
+					$tax_annual_amount
+					$mls_area
+					$mlsid
+				  </tbody>
+				</table>
+				$mapMarkup
+				<script>$lh_analytics</script>
+			  </div>
+HTML;
+		}
+		
         $cont .= SimplyRetsApiHelper::srContactFormDeliver();
         $cont .= $contact_markup;
 
@@ -1414,6 +1556,7 @@ HTML;
             $style              = $listing->property->style;
             $yearBuilt          = $listing->property->yearBuilt;
             $internetAddressDisplay = $listing->internetAddressDisplay;
+			$acres				= $listing->property->acres;
 
             /**
              * Listing status to show. This may return a statusText.
@@ -1532,45 +1675,126 @@ HTML;
 			if($resultsIndex % 3 === 0) {
 				 $resultsMarkup .= '<div class="et_pb_row anasazi_listing_row">';
 			}
-
-
-            // append markup for this listing to the content
-            $resultsMarkup .= <<<HTML
-			<div class="et_pb_column anasazi_listing_column et_pb_column_1_3 et_pb_css_mix_blend_mode_passthrough">
-				<div class="et_pb_module et_pb_image anasazi_listing_image">
-					<span class="et_pb_image_wrap ">
-						<a href="$link">
-							<img src="$main_photo" alt="">
-						</a>
-					</span>
-				</div>
-				<div class="et_pb_button_module_wrapper et_pb_button_alignment_center et_pb_module et_had_animation" style="">
-					<a class="et_pb_button anasazi_listing_button et_pb_custom_button_icon et_hover_enabled et_pb_bg_layout_dark" href="$link" data-icon="5">View Listing</a>
-				</div>
-				<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center">
-					<div class="et_pb_text_inner">
-						<p>$city, UT</p>
-						<p>$address</p>
-						<h4>$listing_USD</h4>
-						<p>Beds: $bedrooms</p>
-						<p>Baths: $bathsFull | $bathsHalf</p>
-						<p>Sq. Ft. $area</p>
+			
+			if ( !$address ) {
+				$address = 'Undisclosed Address';
+			}
+			
+			if( strpos( $settings['type'], 'multifamily' ) !== false ) {
+				
+				// append markup for this listing to the content
+				$resultsMarkup .= <<<HTML
+				<div class="et_pb_column anasazi_listing_column et_pb_column_1_3 et_pb_css_mix_blend_mode_passthrough">
+					<div class="et_pb_module et_pb_image anasazi_listing_image">
+						<span class="et_pb_image_wrap ">
+							<a href="$link">
+								<img src="$main_photo" alt="">
+							</a>
+						</span>
 					</div>
-				</div>
-				<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center anasazi_listing_meta">
-					<div class="et_pb_text_inner">
-						<div class="anasazi_listing_meta_left">
-							<p>Listing Curtesy Of: $listing_office</p>
-							<p>Listing Agent: $listing_agent_name</p>
-						</div>
-						<div class="anasazi_listing_meta_right">
-							<p>#$mlsid</p>
+					<div class="et_pb_button_module_wrapper et_pb_button_alignment_center et_pb_module et_had_animation" style="">
+						<a class="et_pb_button anasazi_listing_button et_pb_custom_button_icon et_hover_enabled et_pb_bg_layout_dark" href="$link" data-icon="5">View Listing</a>
+					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center">
+						<div class="et_pb_text_inner">
+							<p>$city, UT</p>
+							<p>$address</p>
+							<h4>$listing_USD</h4>
+							<p>Sq. Ft. $area</p>
 						</div>
 					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center anasazi_listing_meta">
+						<div class="et_pb_text_inner">
+							<div class="anasazi_listing_meta_left">
+								<p>Listing Curtesy Of: $listing_office</p>
+								<p>Listing Agent: $listing_agent_name</p>
+							</div>
+							<div class="anasazi_listing_meta_right">
+								<p>#$mlsid</p>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
+HTML;
+				
+			} else if( $settings['type'] === 'land' ) {
+				
+				// append markup for this listing to the content
+				$resultsMarkup .= <<<HTML
+				<div class="et_pb_column anasazi_listing_column et_pb_column_1_3 et_pb_css_mix_blend_mode_passthrough">
+					<div class="et_pb_module et_pb_image anasazi_listing_image">
+						<span class="et_pb_image_wrap ">
+							<a href="$link">
+								<img src="$main_photo" alt="">
+							</a>
+						</span>
+					</div>
+					<div class="et_pb_button_module_wrapper et_pb_button_alignment_center et_pb_module et_had_animation" style="">
+						<a class="et_pb_button anasazi_listing_button et_pb_custom_button_icon et_hover_enabled et_pb_bg_layout_dark" href="$link" data-icon="5">View Listing</a>
+					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center">
+						<div class="et_pb_text_inner">
+							<p>$city, UT</p>
+							<p>$address</p>
+							<h4>$listing_USD</h4>
+							<p>Acres: $acres</p>
+						</div>
+					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center anasazi_listing_meta">
+						<div class="et_pb_text_inner">
+							<div class="anasazi_listing_meta_left">
+								<p>Listing Curtesy Of: $listing_office</p>
+								<p>Listing Agent: $listing_agent_name</p>
+							</div>
+							<div class="anasazi_listing_meta_right">
+								<p>#$mlsid</p>
+							</div>
+						</div>
+					</div>
+				</div>
+HTML;
+				
+			} else {
+
+				// append markup for this listing to the content
+				$resultsMarkup .= <<<HTML
+				<div class="et_pb_column anasazi_listing_column et_pb_column_1_3 et_pb_css_mix_blend_mode_passthrough">
+					<div class="et_pb_module et_pb_image anasazi_listing_image">
+						<span class="et_pb_image_wrap ">
+							<a href="$link">
+								<img src="$main_photo" alt="">
+							</a>
+						</span>
+					</div>
+					<div class="et_pb_button_module_wrapper et_pb_button_alignment_center et_pb_module et_had_animation" style="">
+						<a class="et_pb_button anasazi_listing_button et_pb_custom_button_icon et_hover_enabled et_pb_bg_layout_dark" href="$link" data-icon="5">View Listing</a>
+					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center">
+						<div class="et_pb_text_inner">
+							<p>$city, UT</p>
+							<p>$address</p>
+							<h4>$listing_USD</h4>
+							<p>Beds: $bedrooms</p>
+							<p>Baths: $bathsFull | $bathsHalf</p>
+							<p>Sq. Ft. $area</p>
+						</div>
+					</div>
+					<div class="et_pb_module et_pb_text et_pb_bg_layout_light et_pb_text_align_center anasazi_listing_meta">
+						<div class="et_pb_text_inner">
+							<div class="anasazi_listing_meta_left">
+								<p>Listing Curtesy Of: $listing_office</p>
+								<p>Listing Agent: $listing_agent_name</p>
+							</div>
+							<div class="anasazi_listing_meta_right">
+								<p>#$mlsid</p>
+							</div>
+						</div>
+					</div>
+				</div>
 HTML;
 			
+			}
+		
 			if($resultsIndex % 3 === 2) {
 				 $resultsMarkup .= '</div>';
 			}

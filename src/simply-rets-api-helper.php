@@ -628,11 +628,14 @@ HTML;
         // full baths
         $listing_bathsFull = $listing->property->bathsFull;
         $bathsFull = SimplyRetsApiHelper::srDetailsTable($listing_bathsFull, "Full Baths");
+		// three quarter baths
+        $listing_bathsThreeQuarter = $listing->property->bathsThreeQuarter;
+        $bathsThreeQuarter = SimplyRetsApiHelper::srDetailsTable($listing_bathsThreeQuarter, "Three Quarter Baths");
         // half baths
         $listing_bathsHalf = $listing->property->bathsHalf;
         $bathsHalf = SimplyRetsApiHelper::srDetailsTable($listing_bathsHalf, "Half Baths");
         // total baths
-        $listing_bathsTotal = $listing->property->bathrooms;
+        $listing_bathsTotal = $listing_bathsFull + $listing_bathsThreeQuarter + $listing_bathsHalf;
         $bathsTotal = SimplyRetsApiHelper::srDetailsTable($listing_bathsTotal, "Total Baths");
         // stories
         $listing_stories = $listing->property->stories;
@@ -751,6 +754,9 @@ HTML;
 		if ( !$address ) {
 			$address = 'Undisclosed Address';
 		}
+		
+		// Optional Anasazi Video
+		$video_html = apply_filters( 'anasazi_listing_video', '', $listing_mlsid );
 
         $listing_city = $listing->address->city;
         $city = SimplyRetsApiHelper::srDetailsTable($listing_city, "City");
@@ -1156,6 +1162,8 @@ HTML;
             $mapMarkup = '';
             $mapLink = '';
         }
+		
+		$encoded_link = urlencode( $link );
         /************************************************/
 
 		if ( $listing->property->type === 'LND' ) {
@@ -1188,6 +1196,10 @@ HTML;
 					  Galleria.run('.sr-gallery');
 				  }
 				</script>
+				<div class="anasazi-social-share">
+					<div class="anasazi-social-share-left">Share</div>
+					<div class="anasazi-social-share-right"></div>
+				</div>
 				<div class="sr-primary-details">
 				  <div class="sr-detail" id="sr-primary-details-size">
 					<h3>$listing_acres <small class="sr-listing-area-sqft">Acres</small></h3>
@@ -1200,6 +1212,7 @@ HTML;
 				<div>
 				  $next_openhouses_banner
 				</div>
+				<div>$video_html</div>
 				<table style="width:100%;">
 				  <thead>
 					<tr>
@@ -1208,9 +1221,10 @@ HTML;
 					$price
 					$close_price
 					$bedrooms
-					$bathsFull
-					$bathsHalf
 					$bathsTotal
+					$bathsFull
+					$bathsThreeQuarter
+					$bathsHalf
 					$style
 					$lotsize_markup
 
@@ -1324,6 +1338,18 @@ HTML;
 					  Galleria.run('.sr-gallery');
 				  }
 				</script>
+				<div class="anasazi-social-share">
+					<div class="anasazi-social-share-left"><h5>Share</h5></div>
+					<div class="anasazi-social-share-right">
+						<ul>
+							<li class="et-social-icon et-social-facebook">
+								<a href="https://www.facebook.com/sharer/sharer.php?u=$encoded_link" target=" _blank" title="Share on Facebook" class="icon">
+									<span>Facebook</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 				<div class="sr-primary-details">
 				  <div class="sr-detail" id="sr-primary-details-beds">
 					<h3>$listing_bedrooms <small>Beds</small></h3>
@@ -1342,6 +1368,7 @@ HTML;
 				<div>
 				  $next_openhouses_banner
 				</div>
+				<div>$video_html</div>
 				<table style="width:100%;">
 				  <thead>
 					<tr>
@@ -1350,9 +1377,10 @@ HTML;
 					$price
 					$close_price
 					$bedrooms
-					$bathsFull
-					$bathsHalf
 					$bathsTotal
+					$bathsFull
+					$bathsThreeQuarter
+					$bathsHalf
 					$style
 					$lotsize_markup
 
@@ -1557,6 +1585,8 @@ HTML;
             $yearBuilt          = $listing->property->yearBuilt;
             $internetAddressDisplay = $listing->internetAddressDisplay;
 			$acres				= $listing->property->acres;
+			
+			$bathsTotal = $listing->property->bathsFull + $listing->property->bathsHalf + $listing->property->bathsThreeQuarter;
 
             /**
              * Listing status to show. This may return a statusText.
@@ -1775,7 +1805,7 @@ HTML;
 							<p>$address</p>
 							<h4>$listing_USD</h4>
 							<p>Beds: $bedrooms</p>
-							<p>Baths: $bathsFull | $bathsHalf</p>
+							<p>Baths: $bathsTotal</p>
 							<p>Sq. Ft. $area</p>
 						</div>
 					</div>
